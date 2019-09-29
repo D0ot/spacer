@@ -5,26 +5,94 @@
  */
 
 #include <iostream>
+#include <string>
 #include <eigen3/Eigen/Dense>
+#include <vector>
+#include <memory>
+#include <map>
 
 namespace Spacer
 {
 
+class Space;
+class Node;
+
 class Space
 {
-
-
-
+  private:
+    std::shared_ptr<Node> m_root;
+    std::map<std::string, Node*> m_nodetable;
 };
 
 class Node
 {
+  private:
 
+    // name of the node
+    std::string m_name;
+
+    // index in parent's vector
+    size_t m_index;
+
+    // pointer to parent's pointer
+    Node* m_parent;
+
+    // central point translation related to parent
+    Eigen::Vector3d m_transRelToPar;
+
+    // the anchor point to parent
+    // translation related to central with central is (0,0,0)
+    Eigen::Vector3d m_anchor;
+
+    // Rotate angle and axis
+    Eigen::AngleAxisd m_angleAndAxis;
+
+    // children nodes
+    std::vector<std::shared_ptr<Node>> m_children;
+
+    // Points related to center
+    std::vector<Eigen::Vector3d> *m_points;
+
+    // dest points
+    std::unique_ptr<std::Vector<Eigen::vector3d>> m_destPoints;
+
+  public:
+
+    Node(const std::string& name, const Eigen::Vector3d& trtp,
+         const Eigen::Vector3d& anchor, const Eigen::AngleAxisd& ana);
+    Node(const Node& n);
+    Node(Node &&n) = delete;
+    Node& operator=(const Node& n);
+    Node& operator=(Node&& n) = delete;
+
+    bool attachToParent(Node* p, const size_t index);
+    bool detachFromParent();
+
+    Node* addChild(const std::string& name, const Eigen::Vector3d& trtp, 
+                   const Eigen::Vector3d& anchor, const Eigen::AngleAxisd& ana);
+    
+    bool delChild(const size_t index);
+
+    // the points are all related value
+    // related to central point, with central point is (0,0,0)
+    // transform in place. remember to backup data.
+    void tranform(std::vector<Eigen::Vector3d>& points);
+
+    // find the child named "name"
+    // it's performance is low
+    Node* findChild(const std::string& name);
+
+
+    // set points set
+    // source
+    void setSourcePointSet(std::vector<Eigen::Vector3d>* points);
+
+    // get points set
+    // transformed
+    std::vector<Eigen::Vector3d>* getDestPointSet(void);
 
 };
 
 
 
 }
-
-
