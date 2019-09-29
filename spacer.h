@@ -54,7 +54,7 @@ class Node
     std::vector<Eigen::Vector3d> *m_points;
 
     // dest points
-    std::unique_ptr<std::Vector<Eigen::vector3d>> m_destPoints;
+    std::unique_ptr<std::vector<Eigen::Vector3d>> m_destPoints;
 
   public:
 
@@ -77,6 +77,9 @@ class Node
     // related to central point, with central point is (0,0,0)
     // transform in place. remember to backup data.
     void tranform(std::vector<Eigen::Vector3d>& points);
+
+    Eigen::Affine3d getTransformLocal();
+    Eigen::Affine3d getTransformGlobal();
 
     // find the child named "name"
     // it's performance is low

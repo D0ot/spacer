@@ -12,6 +12,7 @@
 #include <iostream>
 #include <eigen3/Eigen/Dense>
 #include <cmath>
+#include "spacer.h"
 
 const double PI  =3.141592653589793238463;
 
@@ -34,7 +35,36 @@ void learnEigen3(void)
 
 int main(void)
 {
-    learnEigen3();
-    std::cout << std::endl;
+    //learnEigen3();
+
+    Spacer::Node root("root", Eigen::Vector3d(0,0,0),
+                       Eigen::Vector3d(0,0,0), 
+                       Eigen::AngleAxisd(0, Eigen::Vector3d(1,1,1)));
+    
+    auto shoulder = root.addChild("shoulder", 
+                Eigen::Vector3d(10,0,0), 
+                Eigen::Vector3d(-5,0,0), 
+                Eigen::AngleAxisd(PI/4, Eigen::Vector3d(0,1,1)));
+    
+
+    std::vector<Eigen::Vector3d> points;
+    points.emplace_back(10,0,0);
+
+    if(shoulder)
+    {
+        std::cout << "shoulder not null\n" ;
+    }
+    shoulder->tranform(points);
+
+    for(auto& x:points)
+    {
+        std::cout << x << std::endl;
+    }
+
+
+    
+
+
+
     return 0;
 }

@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.0.0)
+project(spacer VERSION 0.1.0)
 
-add_executable(spacer spacer.cc main.cc)
 
-include_directories( /usr/include )
+set(CMAKE_CXX_STANDARD 14)
+add_executable(spacer main.cc spacer.cc)
+
