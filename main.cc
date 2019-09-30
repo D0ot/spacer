@@ -30,25 +30,20 @@ void learnEigen3(void)
     p2 = t2 * p2;
     std::cout << p2;
 }
-
-
-
-int main(void)
+void nodetest()
 {
-    //learnEigen3();
-
     Spacer::Node root("root", Eigen::Vector3d(0,0,0),
                        Eigen::Vector3d(0,0,0), 
                        Eigen::AngleAxisd(0, Eigen::Vector3d(1,1,1)));
     
     auto shoulder = root.addChild("shoulder", 
                 Eigen::Vector3d(10,0,0), 
-                Eigen::Vector3d(-5,0,0), 
-                Eigen::AngleAxisd(PI/4, Eigen::Vector3d(0,1,1)));
+                Eigen::Vector3d(0,0,0), 
+                Eigen::AngleAxisd(-PI/2, Eigen::Vector3d(1,0,0)));
     
 
     std::vector<Eigen::Vector3d> points;
-    points.emplace_back(10,0,0);
+    points.emplace_back(0,0,5);
 
     if(shoulder)
     {
@@ -61,9 +56,34 @@ int main(void)
         std::cout << x << std::endl;
     }
 
+    auto leg = shoulder->addChild("leg",
+                Eigen::Vector3d(5, 5, 0),
+                Eigen::Vector3d(0, 0, 0),
+                Eigen::AngleAxisd(PI/2, Eigen::Vector3d(0,1,0)));
 
-    
+    std::vector<Eigen::Vector3d> points2;
+    points2.emplace_back(0,0,5);
 
+    if(leg)
+    {
+        std::cout << "left valid\n";
+    }
+    auto affine = leg->getTransformLocal();
+
+    leg->transform(points2);
+
+    for(auto& x:points2)
+    {
+        std::cout << x << std::endl;
+    }
+}    
+
+
+
+int main(void)
+{
+    //learnEigen3();
+    nodetest();
 
 
     return 0;

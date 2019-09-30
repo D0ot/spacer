@@ -15,7 +15,6 @@ namespace Spacer
 {
 
 class Node;
-
 class Node
 {
   private:
@@ -53,6 +52,7 @@ class Node
     Node(const std::string& name, const Eigen::Vector3d& trtp,
          const Eigen::Vector3d& anchor, const Eigen::AngleAxisd& ana);
     Node(const Node& n);
+    ~Node();
     Node(Node &&n) = delete;
     Node& operator=(const Node& n);
     Node& operator=(Node&& n) = delete;
