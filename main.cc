@@ -54,7 +54,7 @@ int main(void)
     {
         std::cout << "shoulder not null\n" ;
     }
-    shoulder->tranform(points);
+    shoulder->transform(points);
 
     for(auto& x:points)
     {

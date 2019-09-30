@@ -113,7 +113,7 @@ std::vector<Eigen::Vector3d>* Node::getDestPointSet()
 }
 
 
-void Node::tranform(std::vector<Eigen::Vector3d>& points)
+void Node::transform(std::vector<Eigen::Vector3d>& points)
 {
     auto affine = getTransformGlobal();
     for(auto & x: points)
@@ -140,7 +140,22 @@ Eigen::Affine3d Node::getTransformGlobal()
     }
     else
     {
-        return Eigen::Affine3d::Identity();
+        return getTransformLocal();
+    }
+}
+
+Node* Node::findChild(const std::string& name)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),[&name](std::shared_ptr<Node> &p){
+        return p->getName() == name;
+    });
+
+    if(i != m_children.end())
+    {
+        return (*i).get;
+    } else
+    {
+        return nullptr;
     }
 }
 

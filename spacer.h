@@ -14,15 +14,7 @@
 namespace Spacer
 {
 
-class Space;
 class Node;
-
-class Space
-{
-  private:
-    std::shared_ptr<Node> m_root;
-    std::map<std::string, Node*> m_nodetable;
-};
 
 class Node
 {
@@ -70,13 +62,15 @@ class Node
 
     Node* addChild(const std::string& name, const Eigen::Vector3d& trtp, 
                    const Eigen::Vector3d& anchor, const Eigen::AngleAxisd& ana);
-    
+
+    // maybe
+    // will be removed 
     bool delChild(const size_t index);
 
     // the points are all related value
     // related to central point, with central point is (0,0,0)
     // transform in place. remember to backup data.
-    void tranform(std::vector<Eigen::Vector3d>& points);
+    void transform(std::vector<Eigen::Vector3d>& points);
 
     Eigen::Affine3d getTransformLocal();
     Eigen::Affine3d getTransformGlobal();
@@ -93,6 +87,10 @@ class Node
     // get points set
     // transformed
     std::vector<Eigen::Vector3d>* getDestPointSet(void);
+
+
+
+    const std::string& getName()const {return m_name;};
 
 };
 
