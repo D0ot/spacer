@@ -15,12 +15,18 @@ namespace Spacer
 Node::Node(const std::string& name, const Eigen::Vector3d& trtp,
            const Eigen::Vector3d& anchor, const Eigen::AngleAxisd& ana)
            : m_name(name), m_transRelToPar(trtp)
-           , m_anchor(anchor),m_angleAndAxis(ana),m_parent(nullptr){}
+           , m_anchor(anchor),m_angleAndAxis(ana),m_parent(nullptr){
+           }
 
 
 Node::Node(const Node& n)
 {
+
     (*this) = n;
+}
+
+Node::~Node()
+{
 }
 
 

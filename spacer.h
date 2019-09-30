@@ -22,6 +22,16 @@ class Space
   private:
     std::shared_ptr<Node> m_root;
     std::map<std::string, Node*> m_nodetable;
+  public:
+    Space();
+    ~Space();
+    Space(const Space& s);
+    Space(Space&& s);
+    Space& operator=(const Space& s);
+    Space& operator=(Space&& s);
+    Node* addNode(const std::string& pname);
+    bool delNode(const std::string& name);
+
 };
 
 class Node
@@ -61,6 +71,7 @@ class Node
     Node(const std::string& name, const Eigen::Vector3d& trtp,
          const Eigen::Vector3d& anchor, const Eigen::AngleAxisd& ana);
     Node(const Node& n);
+    ~Node();
     Node(Node &&n) = delete;
     Node& operator=(const Node& n);
     Node& operator=(Node&& n) = delete;
