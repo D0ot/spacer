@@ -89,8 +89,11 @@ class Node
     std::vector<Eigen::Vector3d>* getDestPointSet(void);
 
 
+    void setAngel(double angle){m_angleAndAxis.angle() = angle;};
 
     const std::string& getName()const {return m_name;};
+    Node* getRawPointer(){return this;};
+    Node* getParent(){return m_parent;};
 
 };
 

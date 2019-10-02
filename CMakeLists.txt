@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(spacer src/main.cc src/spacer.cc)
 target_include_directories(spacer PUBLIC include)
 
-add_executable(spacergui src/gui.cc src/spacer.cc src/glad.c src/shader.cc)
+add_executable(spacergui src/gui.cc src/spacer.cc src/glad.c src/shader.cc src/externdef.cc)
 target_link_libraries(spacergui PUBLIC glfw ${CMAKE_DL_LIBS})
 target_include_directories(spacergui PUBLIC include)
-target_compile_definitions(spacergui PUBLIC ROOT_DIR)
+target_compile_definitions(spacergui PUBLIC EXT_ROOT_DIR=\"${PROJECT_SOURCE_DIR}/\")
 
 
