@@ -158,7 +158,7 @@ Node* Node::findChild(const std::string& name)
 
     if(i != m_children.end())
     {
-        return (*i).get;
+        return (*i).get();
     } else
     {
         return nullptr;
