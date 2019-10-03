@@ -15,7 +15,7 @@ const int screenWidth = 800;
 const int screenHeight = 600;
 
 float cameraSpeed = 0.05f;
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -109,7 +109,7 @@ std::vector<glm::vec3> convs(const std::vector<Eigen::Vector3d> &vs)
     std::vector<glm::vec3> ret;
     for (const auto &x : vs)
     {
-        ret.emplace_back((float)x.x() + 50, (float)x.y() + 50, (float)x.z() +50);
+        ret.emplace_back((float)x.x() , (float)x.y() , (float)x.z() );
     }
     return ret;
 }
@@ -170,7 +170,7 @@ int main()
 
     glViewport(0, 0, 800, 600);
 
-    dataSetInit();
+    //dataSetInit();
 
     std::map<std::string, Spacer::Node *> nodeTable;
 
@@ -239,8 +239,51 @@ int main()
 
     glm::mat4 model(1.0f), proj(1.0f);
 
-    Spacer::Node *a = nodeTable["shoulder_r"];
-    double angle;
+    Spacer::Node *a = nodeTable["head"];
+    Spacer::Node *b = nodeTable["upperarm_r"];
+    Spacer::Node *hip1 = nodeTable["hip1_r"];
+    Spacer::Node *hip2 = nodeTable["hip2_r"];
+    Spacer::Node *foot = nodeTable["foot_l"];
+    double angle = 3;
+
+    float vertics_axis[]
+    {
+        0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 
+        100.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 
+
+        0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 
+        0.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+
+        0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 
+        0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    ShaderProgram program2(pathRelatedToRoot("shader/axis.vs"), pathRelatedToRoot("shader/axis.fs"));
+
+    GLuint VAO2, VBO2;
+    glGenVertexArrays(1, &VAO2);
+    glGenBuffers(1, &VBO2);
+
+    glBindVertexArray(VAO2);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertics_axis), vertics_axis, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    program2.use();
+
+    GLint modelloc2 = glGetUniformLocation(program2.getProgram(), "model");
+    GLint viewloc2 = glGetUniformLocation(program2.getProgram(), "view");
+    GLint projloc2 = glGetUniformLocation(program2.getProgram(), "proj");
+
+
+
+
+
 
 
     while (!glfwWindowShouldClose(window))
@@ -249,7 +292,12 @@ int main()
         glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //a->setAngel(glfwGetTime() * 10);
+        a->setAngel(glfwGetTime() * angle);
+        b->setAngel(glfwGetTime() * angle);
+        //hip1->setAngel(glfwGetTime() * angle);
+        //hip2->setAngel(glfwGetTime() * angle);
+        foot->setAngel(glfwGetTime() * angle);
+
 
         vertics.clear();
         std::vector<std::pair<size_t, size_t>> size_pairs;
@@ -260,6 +308,11 @@ int main()
             size_pairs.push_back(std::make_pair(sizesum, g.size()));
             sizesum += g.size();
         }
+
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        program.use();
+
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * vertics.size(), vertics.data(), GL_STATIC_DRAW);
 
         input_process(window);
@@ -278,7 +331,7 @@ int main()
 
         model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-        model = glm::translate(model, glm::vec3(0, 0, -10));
+        model = glm::translate(model, glm::vec3(0, 0, 0));
         proj = glm::perspective(glm::radians(45.0f), 8.0f / 6.0f, 0.1f, 500.0f);
 
         glUniformMatrix4fv(modelloc, 1, GL_FALSE, glm::value_ptr(model));
@@ -290,6 +343,16 @@ int main()
         {
             glDrawArrays(GL_LINE_STRIP, size_pairs[i].first, size_pairs[i].second);
         }
+
+        program2.use();
+        glBindVertexArray(VAO2);
+        glUniformMatrix4fv(modelloc2, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewloc2, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projloc2, 1, GL_FALSE, glm::value_ptr(proj));
+
+        glDrawArrays(GL_LINES, 0, 6);
+
+
 
 
 
